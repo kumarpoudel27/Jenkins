@@ -1,0 +1,32 @@
+pipeline{
+    agent any
+    environment{
+        myVar = "Outer Block"
+    }
+    stages {
+        stage("checkout"){
+            steps {
+                checkout scm
+            }
+        }
+            stage('Build'){
+                steps{
+                sh "sh random-emoji.sh"
+                }  
+            }
+        stage('post task'){
+            steps{
+            sh "echo emailing "
+            }
+        }
+        stage('Printing Envirn var'){
+            environment {
+                 myVar = "Inner Block"
+            }
+            steps{
+                sh 'echo "This is my variable: $myVar" '
+            }
+       }
+
+    }
+}
