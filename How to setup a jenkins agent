@@ -1,0 +1,14 @@
+How to spin up a Agent in Jenkins or to build the executor (Master/Agent)
+
+Launch a EC2 machine for the agent node usually rehat linux ———> install java(sudo yum install java -y)——>
+
+Jenkis ——————> Dashboard ————>Manage Jenkins———>manage nodes and clouds———> new node————> Node name (rhel-agent1) as a permanent agent————> Description( RedHat Linux agent)————> # of Executors ( it is based on the configuration of the machine. Suppose if a machine has 4 cpu and 16 gb ram then the executors will be 4)————->Remote root directory(go to terminal and hit pwd, then create a folder using mkdir Jenkins-log, then again hit pwd and copy that path and paste it )————>labels ( give a nickname can be more than 3 such as agent1 rhel maven)———> usage( select only build jobs with label expressions matching this node)—————> launch method ( select launch agent via SSH)———> Host ( go to the terminal and hit  command ip a , then in the second Line find inet below link/ether then copy the IP address and put it in the host)————>credentials (have to be created so go to the terminal and hit the command (ssh-keygen -t rsa),then hit ls -latr then do cat of the key, then go to Jenkins choose add in the box on the side— for domain choose global credentials—kind would be SSH username with private key —— ID would be agent-ssh-key— Description would be agent-ssh-key— private key enter ec2-user ——privatekey (enter directly).To get private key go to terminal hit cat name(private key) copy the private key and copy it in the key —- verification startegy would be manually trusted key verification startegy—then go to the terminal of the agent or target an hit the command cat /etc/ssh (provide sudo)——— the public key will be visible with command ls -latr then cat ssh_host_ecdsa_key.pub and copy and paste then save it. Again comeback to the agent edit it in the  credentials with (ec2-user (agent-ssh-key))
+
+Now go to the master terminal and hit cat name.pub to get the public key and copy the key and got to the agent terminal then hit cd ———> hit cd .ssh————>hit nano authorized_keys———>paste the key inside———> go to Jenkins———>go to nodes and then launch agent———>after that you should be able to see a agent in the  build a executor section.
+
+Then finally to select in which agent to run go to the pipeline script and instead of the agent any do the following 
+		agent {
+			label ‘agent 1(nick name )’
+			}
+Do not forget to install the git in the agent node or terminal.
+
